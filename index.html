@@ -19,7 +19,7 @@
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
             text-align: center; color: white; width: 300px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; text-align: center; font-size: 16px; outline: none; }
+        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; text-align: center; font-size: 16px; outline: none; color: #000; }
         .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
 
         /* --- DESKTOP --- */
@@ -37,10 +37,11 @@
             box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
         }
         .title-bar { padding: 12px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
-        .close-btn { background: #ff5f57; border: none; width: 20px; height: 20px; border-radius: 50%; color: white; cursor: pointer; font-size: 14px; line-height: 1; }
+        .window-controls { display: flex; gap: 10px; align-items: center; }
+        .win-btn { border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+        .close-btn { background: #ff5f57; }
+        .fs-btn { background: #febc2e; color: #000; font-weight: bold; }
         .content { flex-grow: 1; background: #000; position: relative; }
-        
-        /* The important fix for sound and full screen */
         iframe { width: 100%; height: 100%; border: none; }
 
         /* --- TASKBAR --- */
@@ -50,11 +51,11 @@
             display: flex; align-items: center; gap: 20px; padding: 0 25px; border-radius: 20px; z-index: 100;
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .tb-icon { font-size: 30px; cursor: pointer; transition: transform 0.2s, filter 0.2s; }
-        .tb-icon:hover { transform: scale(1.1); filter: drop-shadow(0 0 8px var(--accent)); }
+        .tb-icon { font-size: 30px; cursor: pointer; transition: transform 0.2s; }
+        .tb-icon:active { transform: scale(0.85); }
     </style>
 </head>
-<body>
+<body data-version="fs-edition">
 
     <div id="login-screen">
         <div class="login-box">
@@ -66,32 +67,34 @@
 
     <div id="os-content">
         <div id="mc" class="window">
-            <div class="title-bar"><span>Minecraft Classic</span><button class="close-btn" onclick="cls('mc')">×</button></div>
+            <div class="title-bar">
+                <span>Minecraft Classic</span>
+                <div class="window-controls">
+                    <button class="win-btn fs-btn" onclick="goFS('mc')">⛶</button>
+                    <button class="win-btn close-btn" onclick="cls('mc')">×</button>
+                </div>
+            </div>
             <div class="content">
-                <iframe src="https://classic.minecraft.net/" 
-                        allow="autoplay; fullscreen; pointer-lock"></iframe>
+                <iframe src="https://classic.minecraft.net/" allow="autoplay; fullscreen; pointer-lock"></iframe>
             </div>
         </div>
         
         <div id="gd" class="window">
-            <div class="title-bar"><span>Geometry Dash</span><button class="close-btn" onclick="cls('gd')">×</button></div>
-            <div class="content">
-                <iframe src="https://geometrylitepc.io" 
-                        allow="autoplay; fullscreen"></iframe>
+            <div class="title-bar">
+                <span>Geometry Dash</span>
+                <div class="window-controls">
+                    <button class="win-btn fs-btn" onclick="goFS('gd')">⛶</button>
+                    <button class="win-btn close-btn" onclick="cls('gd')">×</button>
+                </div>
             </div>
-        </div>
-        
-        <div id="notes" class="window" style="width:350px; height: 400px;">
-            <div class="title-bar"><span>Notes</span><button class="close-btn" onclick="cls('notes')">×</button></div>
-            <div class="content" style="background:white;">
-                <textarea style="width:100%; height:100%; border:none; padding:15px; outline:none; font-size:16px; box-sizing: border-box;"></textarea>
+            <div class="content">
+                <iframe src="https://geometrylitepc.io" allow="autoplay; fullscreen"></iframe>
             </div>
         </div>
 
         <div class="taskbar">
             <div class="tb-icon" onclick="opn('mc')">⛏️</div>
             <div class="tb-icon" onclick="opn('gd')">🔥</div>
-            <div class="tb-icon" onclick="opn('notes')">📝</div>
             <div class="tb-icon" onclick="location.reload()">🔒</div>
         </div>
     </div>
@@ -111,6 +114,14 @@
         }
         
         function cls(id) { document.getElementById(id).style.display = 'none'; }
+
+        // New Fullscreen Function
+        function goFS(id) {
+            const el = document.getElementById(id).querySelector('iframe');
+            if (el.requestFullscreen) { el.requestFullscreen(); }
+            else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); } // Safari/iPad fix
+            else if (el.msRequestFullscreen) { el.msRequestFullscreen(); }
+        }
 
         function makeDraggable(el, handle) {
             let drg = false, sx, sy, ix, iy;
