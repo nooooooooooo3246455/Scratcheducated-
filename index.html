@@ -3,87 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Scratch Education Portal</title>
+    <title>Portal OS</title>
     <style>
-        :root { --accent: #4d97ff; --glass: rgba(0, 0, 0, 0.85); }
+        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.8); }
         body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
         
         /* --- LOGIN SCREEN --- */
         #login-screen {
             position: fixed; inset: 0; 
-            background: #111;
-            display: flex; align-items: center; justify-content: center; z-index: 10000;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
+            background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
         }
         .login-box { 
-            background: #222; padding: 30px; border-radius: 15px; 
-            text-align: center; color: white; width: 80%; max-width: 300px;
-            border: 1px solid #333;
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
+            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
+            text-align: center; color: white; width: 300px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
-        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 8px; border: none; text-align: center; font-size: 16px; color: #000; }
-        .login-box button { width: 100%; padding: 12px; border-radius: 8px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
+        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; text-align: center; font-size: 16px; outline: none; color: #000; }
+        .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
 
         /* --- DESKTOP --- */
         #os-content {
             display: none; width: 100%; height: 100%;
-            background: #0f0f0f;
+            background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover;
         }
 
         /* --- WINDOWS --- */
         .window {
-            position: absolute; top: 5%; left: 5%;
-            width: 85%; height: 75%;
-            background: #1a1a1a; border-radius: 10px; display: none;
+            position: absolute; top: 10%; left: 10%;
+            width: 80%; height: 75%;
+            background: #1a1a1a; border-radius: 15px; display: none;
             flex-direction: column; overflow: hidden; z-index: 10;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid #333;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
         }
-        
-        @media (max-width: 600px) {
-            .window { top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; }
-        }
-
-        .title-bar { padding: 8px 15px; background: #333; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; font-size: 14px; }
-        .win-btn { border: none; width: 24px; height: 24px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .title-bar { padding: 12px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
+        .window-controls { display: flex; gap: 10px; }
+        .win-btn { border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
         .close-btn { background: #ff5f57; }
+        .fs-btn { background: #febc2e; color: #000; }
         
-        .content { flex-grow: 1; background: #fff; position: relative; }
+        .content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
 
         /* --- TASKBAR --- */
         .taskbar {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
-            height: 60px; background: #222;
-            display: flex; align-items: center; gap: 12px; padding: 0 15px; border-radius: 15px; z-index: 100;
-            border: 1px solid #444;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            height: 65px; background: var(--glass); backdrop-filter: blur(20px);
+            display: flex; align-items: center; gap: 20px; padding: 0 25px; border-radius: 20px; z-index: 100;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-        .tb-icon { font-size: 24px; cursor: pointer; padding: 8px; border-radius: 10px; transition: 0.2s; }
-        .tb-icon:hover { background: #333; }
-        .active-app { border-bottom: 3px solid var(--accent); }
+        .tb-icon { font-size: 30px; cursor: pointer; transition: transform 0.2s; position: relative; }
+        .tb-icon:active { transform: scale(0.8); }
+        .active-dot::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
+
+        /* --- SCRATCH TOGGLE BUTTON --- */
+        .scratch-power { background: #4d97ff; color: white; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer; border: none; font-weight: bold; margin-right: 10px; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <h2 style="color: var(--accent)">Scratch Education</h2>
-            <p>Please enter your student PIN</p>
+            <h1>PORTAL</h1>
             <input type="password" id="passInput" placeholder="PIN...">
-            <button onclick="unlock()">Sign In</button>
+            <button onclick="unlock()">ENTER</button>
         </div>
     </div>
 
     <div id="os-content">
-        <div id="scratch" class="window" style="display: flex; width: 90%; height: 85%;">
-            <div class="title-bar"><span>Scratch Project Editor</span><button class="win-btn close-btn" onclick="cls('scratch')">×</button></div>
+        <div id="scratch" class="window">
+            <div class="title-bar">
+                <span>Scratch Project Editor</span>
+                <div class="window-controls">
+                    <button class="scratch-power" onclick="toggleScratchPower()">OFF</button>
+                    <button class="win-btn fs-btn" onclick="goFS('scratch')">⛶</button>
+                    <button class="win-btn close-btn" onclick="cls('scratch')">×</button>
+                </div>
+            </div>
             <div class="content"><iframe id="ifr-scratch" src="https://scratch.mit.edu/projects/editor/?tutorial=getstarted"></iframe></div>
         </div>
 
-        <div id="mc" class="window"><div class="title-bar"><span>Module_Asset_01</span><button class="win-btn close-btn" onclick="cls('mc')">×</button></div><div class="content"><iframe id="ifr-mc" src="" allow="autoplay; fullscreen; pointer-lock"></iframe></div></div>
-        <div id="gd" class="window"><div class="title-bar"><span>Logic_Sim_V2</span><button class="win-btn close-btn" onclick="cls('gd')">×</button></div><div class="content"><iframe id="ifr-gd" src="" allow="autoplay; fullscreen"></iframe></div></div>
-        <div id="slope" class="window"><div class="title-bar"><span>Physics_Calculation</span><button class="win-btn close-btn" onclick="cls('slope')">×</button></div><div class="content"><iframe id="ifr-slope" src="" allow="autoplay; fullscreen"></iframe></div></div>
+        <div id="mc" class="window"><div class="title-bar"><span>Minecraft</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('mc')">⛶</button><button class="win-btn close-btn" onclick="cls('mc')">×</button></div></div><div class="content"><iframe id="ifr-mc" src="" allow="autoplay; fullscreen; pointer-lock"></iframe></div></div>
+        
+        <div id="gd" class="window"><div class="title-bar"><span>Geometry Dash</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('gd')">⛶</button><button class="win-btn close-btn" onclick="cls('gd')">×</button></div></div><div class="content"><iframe id="ifr-gd" src="" allow="autoplay; fullscreen"></iframe></div></div>
+
+        <div id="slope" class="window"><div class="title-bar"><span>Slope</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('slope')">⛶</button><button class="win-btn close-btn" onclick="cls('slope')">×</button></div></div><div class="content"><iframe id="ifr-slope" src="" allow="autoplay; fullscreen"></iframe></div></div>
 
         <div class="taskbar">
-            <div id="icon-scratch" class="tb-icon active-app" onclick="panic()" title="Panic/Scratch">🐱</div>
-            <div style="width: 1px; height: 30px; background: #444; margin: 0 5px;"></div>
+            <div id="icon-scratch" class="tb-icon" onclick="opn('scratch', 'https://scratch.mit.edu/projects/editor/?tutorial=getstarted')">🐱</div>
             <div id="icon-mc" class="tb-icon" onclick="opn('mc', 'https://classic.minecraft.net/')">⛏️</div>
             <div id="icon-gd" class="tb-icon" onclick="opn('gd', 'https://geometrylitepc.io')">🔥</div>
             <div id="icon-slope" class="tb-icon" onclick="opn('slope', 'https://slopegame.io/')">⚽</div>
@@ -99,15 +106,177 @@
             }
         }
 
-        // Panic Function: Closes all games and opens Scratch
-        function panic() {
-            document.querySelectorAll('.window').forEach(win => {
-                if(win.id !== 'scratch') win.style.display = 'none';
-            });
-            document.querySelectorAll('.tb-icon').forEach(icon => {
-                if(icon.id !== 'icon-scratch') icon.classList.remove('active-app');
-            });
-            opn('scratch', 'https://scratch.mit.edu/projects/editor/?tutorial=getstarted');
+        function opn(id, url) { 
+            const win = document.getElementById(id);
+            const ifr = document.getElementById('ifr-' + id);
+            const icon = document.getElementById('icon-' + id);
+            
+            if (ifr.src === "" || ifr.src.includes('about:blank')) { ifr.src = url; }
+            
+            win.style.display = 'flex'; 
+            win.style.zIndex = Date.now(); 
+            icon.classList.add('active-dot');
+        }
+        
+        function cls(id) { 
+            document.getElementById(id).style.display = 'none'; 
+            document.getElementById('icon-' + id).classList.remove('active-dot');
+        }
+
+        // SCRATCH POWER BUTTON LOGIC
+        function toggleScratchPower() {
+            const ifr = document.getElementById('ifr-scratch');
+            const btn = document.querySelector('.scratch-power');
+            if (btn.innerText === "ON") {
+                ifr.src = "https://scratch.mit.edu/projects/editor/?tutorial=getstarted";
+                btn.innerText = "OFF";
+                btn.style.background = "#4d97ff";
+            } else {
+                ifr.src = "about:blank";
+                btn.innerText = "ON";
+                btn.style.background = "#ff5f57";
+            }
+        }
+
+        function goFS(id) {
+            const el = document.getElementById(id).querySelector('iframe');
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        }
+
+        function makeDraggable(el, handle) {
+            if (window.innerWidth < 600) return; 
+            let drg = false, sx, sy, ix, iy;
+            const start = (e) => { 
+                drg = true; 
+                const t = e.touches ? e.touches[0] : e; 
+                sx = t.clientX; sy = t.clientY; 
+                ix = el.offsetLeft; iy = el.offsetTop; 
+                el.style.zIndex = Date.now(); 
+            };
+            const move = (e) => { 
+                if(!drg) return; 
+                const t = e.touches ? e.touches[0] : e; 
+                el.style.left = (ix + (t.clientX - sx)) + 'px'; 
+                el.style.top = (iy + (t.clientY - sy)) + 'px'; 
+            };
+            handle.addEventListener('mousedown', start); 
+            handle.addEventListener('touchstart', start);
+            document.addEventListener('mousemove', move); 
+            document.addEventListener('touchmove', move, {passive:false});
+            document.addEventListener('mouseup', () => drg = false); 
+            document.addEventListener('touchend', () => drg = false);
+        }
+        document.querySelectorAll('.window').forEach(w => makeDraggable(w, w.querySelector('.title-bar')));
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal OS</title>
+    <style>
+        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.8); }
+        body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
+        
+        /* --- LOGIN SCREEN --- */
+        #login-screen {
+            position: fixed; inset: 0; 
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
+            background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
+        }
+        .login-box { 
+            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
+            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
+            text-align: center; color: white; width: 300px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; text-align: center; font-size: 16px; outline: none; color: #000; }
+        .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
+
+        /* --- DESKTOP --- */
+        #os-content {
+            display: none; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover;
+        }
+
+        /* --- WINDOWS --- */
+        .window {
+            position: absolute; top: 10%; left: 10%;
+            width: 80%; height: 75%;
+            background: #1a1a1a; border-radius: 15px; display: none;
+            flex-direction: column; overflow: hidden; z-index: 10;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .title-bar { padding: 12px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
+        .window-controls { display: flex; gap: 10px; }
+        .win-btn { border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .close-btn { background: #ff5f57; }
+        .fs-btn { background: #febc2e; color: #000; }
+        
+        .content { flex-grow: 1; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* --- TASKBAR --- */
+        .taskbar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            height: 65px; background: var(--glass); backdrop-filter: blur(20px);
+            display: flex; align-items: center; gap: 20px; padding: 0 25px; border-radius: 20px; z-index: 100;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .tb-icon { font-size: 30px; cursor: pointer; transition: transform 0.2s; position: relative; }
+        .tb-icon:active { transform: scale(0.8); }
+        .active-dot::after { content: ''; position: absolute; bottom: -8px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: var(--accent); border-radius: 50%; }
+
+        /* --- SCRATCH TOGGLE BUTTON --- */
+        .scratch-power { background: #4d97ff; color: white; padding: 5px 10px; border-radius: 5px; font-size: 10px; cursor: pointer; border: none; font-weight: bold; margin-right: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="login-screen">
+        <div class="login-box">
+            <h1>PORTAL</h1>
+            <input type="password" id="passInput" placeholder="PIN...">
+            <button onclick="unlock()">ENTER</button>
+        </div>
+    </div>
+
+    <div id="os-content">
+        <div id="scratch" class="window">
+            <div class="title-bar">
+                <span>Scratch Project Editor</span>
+                <div class="window-controls">
+                    <button class="scratch-power" onclick="toggleScratchPower()">OFF</button>
+                    <button class="win-btn fs-btn" onclick="goFS('scratch')">⛶</button>
+                    <button class="win-btn close-btn" onclick="cls('scratch')">×</button>
+                </div>
+            </div>
+            <div class="content"><iframe id="ifr-scratch" src="https://scratch.mit.edu/projects/editor/?tutorial=getstarted"></iframe></div>
+        </div>
+
+        <div id="mc" class="window"><div class="title-bar"><span>Minecraft</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('mc')">⛶</button><button class="win-btn close-btn" onclick="cls('mc')">×</button></div></div><div class="content"><iframe id="ifr-mc" src="" allow="autoplay; fullscreen; pointer-lock"></iframe></div></div>
+        
+        <div id="gd" class="window"><div class="title-bar"><span>Geometry Dash</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('gd')">⛶</button><button class="win-btn close-btn" onclick="cls('gd')">×</button></div></div><div class="content"><iframe id="ifr-gd" src="" allow="autoplay; fullscreen"></iframe></div></div>
+
+        <div id="slope" class="window"><div class="title-bar"><span>Slope</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('slope')">⛶</button><button class="win-btn close-btn" onclick="cls('slope')">×</button></div></div><div class="content"><iframe id="ifr-slope" src="" allow="autoplay; fullscreen"></iframe></div></div>
+
+        <div class="taskbar">
+            <div id="icon-scratch" class="tb-icon" onclick="opn('scratch', 'https://scratch.mit.edu/projects/editor/?tutorial=getstarted')">🐱</div>
+            <div id="icon-mc" class="tb-icon" onclick="opn('mc', 'https://classic.minecraft.net/')">⛏️</div>
+            <div id="icon-gd" class="tb-icon" onclick="opn('gd', 'https://geometrylitepc.io')">🔥</div>
+            <div id="icon-slope" class="tb-icon" onclick="opn('slope', 'https://slopegame.io/')">⚽</div>
+            <div class="tb-icon" onclick="location.reload()">🔒</div>
+        </div>
+    </div>
+
+    <script>
+        function unlock() {
+            if(document.getElementById('passInput').value === "admin") {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('os-content').style.display = 'block';
+            }
         }
 
         function opn(id, url) { 
@@ -119,16 +288,35 @@
             
             win.style.display = 'flex'; 
             win.style.zIndex = Date.now(); 
-            if(icon) icon.classList.add('active-app');
+            icon.classList.add('active-dot');
         }
         
         function cls(id) { 
             document.getElementById(id).style.display = 'none'; 
-            const icon = document.getElementById('icon-' + id);
-            if(icon) icon.classList.remove('active-app');
+            document.getElementById('icon-' + id).classList.remove('active-dot');
         }
 
-        // Dragging Logic
+        // SCRATCH POWER BUTTON LOGIC
+        function toggleScratchPower() {
+            const ifr = document.getElementById('ifr-scratch');
+            const btn = document.querySelector('.scratch-power');
+            if (btn.innerText === "ON") {
+                ifr.src = "https://scratch.mit.edu/projects/editor/?tutorial=getstarted";
+                btn.innerText = "OFF";
+                btn.style.background = "#4d97ff";
+            } else {
+                ifr.src = "about:blank";
+                btn.innerText = "ON";
+                btn.style.background = "#ff5f57";
+            }
+        }
+
+        function goFS(id) {
+            const el = document.getElementById(id).querySelector('iframe');
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+        }
+
         function makeDraggable(el, handle) {
             if (window.innerWidth < 600) return; 
             let drg = false, sx, sy, ix, iy;
