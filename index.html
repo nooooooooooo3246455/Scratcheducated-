@@ -2,321 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portal</title>
     <style>
         :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.85); }
         body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
         
-        #login-screen {
-            position: fixed; inset: 0; 
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
-            background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
-        }
-        .login-box { 
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
-            padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: center; color: white; width: 80%; max-width: 300px;
-        }
-        .login-box input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 12px; border: none; text-align: center; font-size: 18px; box-sizing: border-box; color: #000; }
-        .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
-
+        /* THE DESKTOP */
         #os-content {
-            display: none; width: 100%; height: 100%;
+            width: 100%; height: 100%;
             background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .window {
-            position: absolute; top: 5%; left: 5%;
-            width: 85%; height: 75%;
-            background: #1a1a1a; border-radius: 15px; display: none;
-            flex-direction: column; overflow: hidden; z-index: 10;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        }
-        
-        @media (max-width: 600px) {
-            .window { top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; }
+        .welcome-box {
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 30px; border-radius: 25px; color: white; text-align: center;
+            border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            width: 80%; max-width: 400px;
         }
 
-        .title-bar { padding: 10px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
-        .window-controls { display: flex; gap: 12px; align-items: center; }
-        .win-btn { border: none; width: 28px; height: 28px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-        .close-btn { background: #ff5f57; }
-        .fs-btn { background: #febc2e; color: #000; font-weight: bold; }
-        .pwr-btn { background: #4d97ff; color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
-
-        .content { flex-grow: 1; background: #000; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
-
+        /* THE TASKBAR */
         .taskbar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            height: 65px; background: var(--glass); backdrop-filter: blur(20px);
-            display: flex; align-items: center; gap: 15px; padding: 0 20px; border-radius: 20px; z-index: 100;
-            border: 1px solid rgba(255,255,255,0.1);
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            height: 75px; background: var(--glass); backdrop-filter: blur(30px);
+            display: flex; align-items: center; gap: 20px; padding: 0 30px; border-radius: 30px; z-index: 100;
+            border: 1px solid rgba(255,255,255,0.2);
         }
-        .tb-icon { font-size: 28px; cursor: pointer; transition: all 0.2s; padding: 5px; border-radius: 10px; }
-        .active-app { box-shadow: inset 0 -3px 0 var(--accent); background: rgba(162, 155, 254, 0.2); }
+
+        .tb-icon { font-size: 35px; cursor: pointer; transition: transform 0.2s; -webkit-tap-highlight-color: transparent; }
+        .tb-icon:active { transform: scale(0.85); }
+        
+        h1 { margin: 0; font-weight: 300; font-size: 28px; letter-spacing: 2px; }
+        p { opacity: 0.6; font-size: 14px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <div class="login-box">
-            <h1>PORTAL</h1>
-            <input type="password" id="passInput" placeholder="PIN...">
-            <button onclick="unlock()">ENTER</button>
-        </div>
-    </div>
-
     <div id="os-content">
-        <div id="scratch" class="window"><div class="title-bar"><span>Scratch</span><div class="window-controls"><button id="pwr-scratch" class="pwr-btn" onclick="togglePwr('scratch', 'https://scratch.mit.edu/projects/editor/embed')">ON</button><button class="win-btn fs-btn" onclick="goFS('scratch')">⛶</button><button class="win-btn close-btn" onclick="cls('scratch')">×</button></div></div><div class="content"><iframe id="ifr-scratch" src=""></iframe></div></div>
-        
-        <div id="mc" class="window"><div class="title-bar"><span>Minecraft</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('mc')">⛶</button><button class="win-btn close-btn" onclick="cls('mc')">×</button></div></div><div class="content"><iframe id="ifr-mc" src="" allow="autoplay; fullscreen; pointer-lock"></iframe></div></div>
-        
-        <div id="gd" class="window"><div class="title-bar"><span>Geometry Dash</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('gd')">⛶</button><button class="win-btn close-btn" onclick="cls('gd')">×</button></div></div><div class="content"><iframe id="ifr-gd" src="" allow="autoplay; fullscreen"></iframe></div></div>
-
-        <div id="slope" class="window"><div class="title-bar"><span>Slope</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('slope')">⛶</button><button class="win-btn close-btn" onclick="cls('slope')">×</button></div></div><div class="content"><iframe id="ifr-slope" src="" allow="autoplay; fullscreen"></iframe></div></div>
+        <div class="welcome-box">
+            <h1>PORTAL</h1>
+            <p>Tap an icon below to launch.<br>Games open in new tabs to prevent black screens.</p>
+        </div>
 
         <div class="taskbar">
-            <div id="icon-scratch" class="tb-icon" onclick="opn('scratch', 'https://scratch.mit.edu/projects/editor/embed')">🐱</div>
-            <div id="icon-mc" class="tb-icon" onclick="opn('mc', 'https://classic.minecraft.net/')">⛏️</div>
-            <div id="icon-gd" class="tb-icon" onclick="opn('gd', 'https://geometry-dash.io/')">🔥</div>
-            <div id="icon-slope" class="tb-icon" onclick="opn('slope', 'https://kbhgames.com/game/slope')">⚽</div>
-            <div class="tb-icon" onclick="location.reload()">🔒</div>
+            <div class="tb-icon" onclick="launch('https://scratch.mit.edu/projects/editor/')">🐱</div>
+            <div class="tb-icon" onclick="launch('https://classic.minecraft.net/')">⛏️</div>
+            <div class="tb-icon" onclick="launch('https://geometrylitepc.io')">🔥</div>
+            <div class="tb-icon" onclick="launch('https://slopegame.io/')">⚽</div>
+            <div class="tb-icon" onclick="location.reload()">🔄</div>
         </div>
     </div>
 
     <script>
-        function unlock() {
-            if(document.getElementById('passInput').value === "admin") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('os-content').style.display = 'block';
-            }
+        function launch(url) {
+            // This bypasses iPad's "Black Screen" frame block
+            window.open(url, '_blank');
         }
-
-        function opn(id, url) { 
-            const win = document.getElementById(id);
-            const ifr = document.getElementById('ifr-' + id);
-            const icon = document.getElementById('icon-' + id);
-            
-            // EMERGENCY: Force iframe to reload source every time it's opened to prevent black screen
-            ifr.src = url; 
-            
-            win.style.display = 'flex'; 
-            win.style.zIndex = Date.now(); 
-            icon.classList.add('active-app');
-        }
-        
-        function cls(id) { 
-            document.getElementById(id).style.display = 'none'; 
-            document.getElementById('ifr-' + id).src = ""; // Clear src to save memory
-            document.getElementById('icon-' + id).classList.remove('active-app');
-        }
-
-        function togglePwr(id, url) {
-            const ifr = document.getElementById('ifr-' + id);
-            const btn = document.getElementById('pwr-' + id);
-            if (btn.innerText === "OFF") {
-                ifr.src = "about:blank";
-                btn.innerText = "ON";
-            } else {
-                ifr.src = url;
-                btn.innerText = "OFF";
-            }
-        }
-
-        function goFS(id) {
-            const el = document.getElementById(id).querySelector('iframe');
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        }
-
-        // Re-added draggable for desktop/laptop
-        function makeDraggable(el, handle) {
-            if (window.innerWidth < 600) return; 
-            let drg = false, sx, sy, ix, iy;
-            const start = (e) => { 
-                drg = true; 
-                const t = e.touches ? e.touches[0] : e; 
-                sx = t.clientX; sy = t.clientY; 
-                ix = el.offsetLeft; iy = el.offsetTop; 
-                el.style.zIndex = Date.now(); 
-            };
-            const move = (e) => { 
-                if(!drg) return; 
-                const t = e.touches ? e.touches[0] : e; 
-                el.style.left = (ix + (t.clientX - sx)) + 'px'; 
-                el.style.top = (iy + (t.clientY - sy)) + 'px'; 
-            };
-            handle.addEventListener('mousedown', start); 
-            handle.addEventListener('touchstart', start);
-            document.addEventListener('mousemove', move); 
-            document.addEventListener('touchmove', move, {passive:false});
-            document.addEventListener('mouseup', () => drg = false); 
-            document.addEventListener('touchend', () => drg = false);
-        }
-        document.querySelectorAll('.window').forEach(w => makeDraggable(w, w.querySelector('.title-bar')));
-    </script>
-</body>
-</html>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Portal</title>
-    <style>
-        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.85); }
-        body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
-        
-        #login-screen {
-            position: fixed; inset: 0; 
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
-            background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
-        }
-        .login-box { 
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
-            padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: center; color: white; width: 80%; max-width: 300px;
-        }
-        .login-box input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 12px; border: none; text-align: center; font-size: 18px; box-sizing: border-box; color: #000; }
-        .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
-
-        #os-content {
-            display: none; width: 100%; height: 100%;
-            background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover;
-        }
-
-        .window {
-            position: absolute; top: 5%; left: 5%;
-            width: 85%; height: 75%;
-            background: #1a1a1a; border-radius: 15px; display: none;
-            flex-direction: column; overflow: hidden; z-index: 10;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-        }
-        
-        @media (max-width: 600px) {
-            .window { top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; }
-        }
-
-        .title-bar { padding: 10px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
-        .window-controls { display: flex; gap: 12px; align-items: center; }
-        .win-btn { border: none; width: 28px; height: 28px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
-        .close-btn { background: #ff5f57; }
-        .fs-btn { background: #febc2e; color: #000; font-weight: bold; }
-        .pwr-btn { background: #4d97ff; color: white; border: none; padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; }
-
-        .content { flex-grow: 1; background: #000; position: relative; }
-        iframe { width: 100%; height: 100%; border: none; background: #000; }
-
-        .taskbar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            height: 65px; background: var(--glass); backdrop-filter: blur(20px);
-            display: flex; align-items: center; gap: 15px; padding: 0 20px; border-radius: 20px; z-index: 100;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .tb-icon { font-size: 28px; cursor: pointer; transition: all 0.2s; padding: 5px; border-radius: 10px; }
-        .active-app { box-shadow: inset 0 -3px 0 var(--accent); background: rgba(162, 155, 254, 0.2); }
-    </style>
-</head>
-<body>
-
-    <div id="login-screen">
-        <div class="login-box">
-            <h1>PORTAL</h1>
-            <input type="password" id="passInput" placeholder="PIN...">
-            <button onclick="unlock()">ENTER</button>
-        </div>
-    </div>
-
-    <div id="os-content">
-        <div id="scratch" class="window"><div class="title-bar"><span>Scratch</span><div class="window-controls"><button id="pwr-scratch" class="pwr-btn" onclick="togglePwr('scratch', 'https://scratch.mit.edu/projects/editor/embed')">ON</button><button class="win-btn fs-btn" onclick="goFS('scratch')">⛶</button><button class="win-btn close-btn" onclick="cls('scratch')">×</button></div></div><div class="content"><iframe id="ifr-scratch" src=""></iframe></div></div>
-        
-        <div id="mc" class="window"><div class="title-bar"><span>Minecraft</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('mc')">⛶</button><button class="win-btn close-btn" onclick="cls('mc')">×</button></div></div><div class="content"><iframe id="ifr-mc" src="" allow="autoplay; fullscreen; pointer-lock"></iframe></div></div>
-        
-        <div id="gd" class="window"><div class="title-bar"><span>Geometry Dash</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('gd')">⛶</button><button class="win-btn close-btn" onclick="cls('gd')">×</button></div></div><div class="content"><iframe id="ifr-gd" src="" allow="autoplay; fullscreen"></iframe></div></div>
-
-        <div id="slope" class="window"><div class="title-bar"><span>Slope</span><div class="window-controls"><button class="win-btn fs-btn" onclick="goFS('slope')">⛶</button><button class="win-btn close-btn" onclick="cls('slope')">×</button></div></div><div class="content"><iframe id="ifr-slope" src="" allow="autoplay; fullscreen"></iframe></div></div>
-
-        <div class="taskbar">
-            <div id="icon-scratch" class="tb-icon" onclick="opn('scratch', 'https://scratch.mit.edu/projects/editor/embed')">🐱</div>
-            <div id="icon-mc" class="tb-icon" onclick="opn('mc', 'https://classic.minecraft.net/')">⛏️</div>
-            <div id="icon-gd" class="tb-icon" onclick="opn('gd', 'https://geometry-dash.io/')">🔥</div>
-            <div id="icon-slope" class="tb-icon" onclick="opn('slope', 'https://kbhgames.com/game/slope')">⚽</div>
-            <div class="tb-icon" onclick="location.reload()">🔒</div>
-        </div>
-    </div>
-
-    <script>
-        function unlock() {
-            if(document.getElementById('passInput').value === "admin") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('os-content').style.display = 'block';
-            }
-        }
-
-        function opn(id, url) { 
-            const win = document.getElementById(id);
-            const ifr = document.getElementById('ifr-' + id);
-            const icon = document.getElementById('icon-' + id);
-            
-            // EMERGENCY: Force iframe to reload source every time it's opened to prevent black screen
-            ifr.src = url; 
-            
-            win.style.display = 'flex'; 
-            win.style.zIndex = Date.now(); 
-            icon.classList.add('active-app');
-        }
-        
-        function cls(id) { 
-            document.getElementById(id).style.display = 'none'; 
-            document.getElementById('ifr-' + id).src = ""; // Clear src to save memory
-            document.getElementById('icon-' + id).classList.remove('active-app');
-        }
-
-        function togglePwr(id, url) {
-            const ifr = document.getElementById('ifr-' + id);
-            const btn = document.getElementById('pwr-' + id);
-            if (btn.innerText === "OFF") {
-                ifr.src = "about:blank";
-                btn.innerText = "ON";
-            } else {
-                ifr.src = url;
-                btn.innerText = "OFF";
-            }
-        }
-
-        function goFS(id) {
-            const el = document.getElementById(id).querySelector('iframe');
-            if (el.requestFullscreen) el.requestFullscreen();
-            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-        }
-
-        // Re-added draggable for desktop/laptop
-        function makeDraggable(el, handle) {
-            if (window.innerWidth < 600) return; 
-            let drg = false, sx, sy, ix, iy;
-            const start = (e) => { 
-                drg = true; 
-                const t = e.touches ? e.touches[0] : e; 
-                sx = t.clientX; sy = t.clientY; 
-                ix = el.offsetLeft; iy = el.offsetTop; 
-                el.style.zIndex = Date.now(); 
-            };
-            const move = (e) => { 
-                if(!drg) return; 
-                const t = e.touches ? e.touches[0] : e; 
-                el.style.left = (ix + (t.clientX - sx)) + 'px'; 
-                el.style.top = (iy + (t.clientY - sy)) + 'px'; 
-            };
-            handle.addEventListener('mousedown', start); 
-            handle.addEventListener('touchstart', start);
-            document.addEventListener('mousemove', move); 
-            document.addEventListener('touchmove', move, {passive:false});
-            document.addEventListener('mouseup', () => drg = false); 
-            document.addEventListener('touchend', () => drg = false);
-        }
-        document.querySelectorAll('.window').forEach(w => makeDraggable(w, w.querySelector('.title-bar')));
     </script>
 </body>
 </html>
