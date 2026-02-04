@@ -5,21 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal</title>
     <style>
-        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.8); }
+        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.85); }
         body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
         
         /* --- LOGIN SCREEN --- */
         #login-screen {
             position: fixed; inset: 0; 
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
             background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
         }
         .login-box { 
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: center; color: white; width: 300px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            padding: 30px; border-radius: 25px; border: 1px solid rgba(255,255,255,0.2);
+            text-align: center; color: white; width: 80%; max-width: 300px;
         }
-        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; text-align: center; font-size: 16px; outline: none; color: #000; }
+        .login-box input { width: 100%; padding: 15px; margin: 20px 0; border-radius: 12px; border: none; text-align: center; font-size: 18px; box-sizing: border-box; }
         .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
 
         /* --- DESKTOP --- */
@@ -31,16 +31,22 @@
         /* --- WINDOWS --- */
         .window {
             position: absolute; top: 5%; left: 5%;
-            width: 85%; height: 80%;
+            width: 90%; height: 80%;
             background: #1a1a1a; border-radius: 15px; display: none;
             flex-direction: column; overflow: hidden; z-index: 10;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.6);
         }
-        .title-bar { padding: 12px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
-        .window-controls { display: flex; gap: 10px; align-items: center; }
-        .win-btn { border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; }
+        
+        @media (max-width: 600px) {
+            .window { top: 0 !important; left: 0 !important; width: 100% !important; height: 100% !important; border-radius: 0; }
+        }
+
+        .title-bar { padding: 10px 15px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
+        .window-controls { display: flex; gap: 12px; }
+        .win-btn { border: none; width: 28px; height: 28px; border-radius: 50%; color: white; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 16px; }
         .close-btn { background: #ff5f57; }
         .fs-btn { background: #febc2e; color: #000; font-weight: bold; }
+        
         .content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
 
@@ -51,11 +57,12 @@
             display: flex; align-items: center; gap: 20px; padding: 0 25px; border-radius: 20px; z-index: 100;
             border: 1px solid rgba(255,255,255,0.1);
         }
-        .tb-icon { font-size: 30px; cursor: pointer; transition: transform 0.2s; }
-        .tb-icon:active { transform: scale(0.85); }
+        .tb-icon { font-size: 32px; cursor: pointer; transition: transform 0.1s; filter: grayscale(0.5); }
+        .tb-icon:hover { filter: grayscale(0); transform: scale(1.1); }
+        .tb-icon:active { transform: scale(0.9); }
     </style>
 </head>
-<body data-version="fs-edition">
+<body>
 
     <div id="login-screen">
         <div class="login-box">
@@ -68,15 +75,13 @@
     <div id="os-content">
         <div id="mc" class="window">
             <div class="title-bar">
-                <span>Minecraft Classic</span>
+                <span>Minecraft</span>
                 <div class="window-controls">
                     <button class="win-btn fs-btn" onclick="goFS('mc')">⛶</button>
                     <button class="win-btn close-btn" onclick="cls('mc')">×</button>
                 </div>
             </div>
-            <div class="content">
-                <iframe src="https://classic.minecraft.net/" allow="autoplay; fullscreen; pointer-lock"></iframe>
-            </div>
+            <div class="content"><iframe id="ifr-mc" src="" allow="autoplay; fullscreen; pointer-lock"></iframe></div>
         </div>
         
         <div id="gd" class="window">
@@ -87,14 +92,12 @@
                     <button class="win-btn close-btn" onclick="cls('gd')">×</button>
                 </div>
             </div>
-            <div class="content">
-                <iframe src="https://geometrylitepc.io" allow="autoplay; fullscreen"></iframe>
-            </div>
+            <div class="content"><iframe id="ifr-gd" src="" allow="autoplay; fullscreen"></iframe></div>
         </div>
 
         <div class="taskbar">
-            <div class="tb-icon" onclick="opn('mc')">⛏️</div>
-            <div class="tb-icon" onclick="opn('gd')">🔥</div>
+            <div class="tb-icon" onclick="opn('mc', 'https://classic.minecraft.net/')" title="Minecraft">⛏️</div>
+            <div class="tb-icon" onclick="opn('gd', 'https://geometrylitepc.io')" title="Geometry Dash">🔥</div>
             <div class="tb-icon" onclick="location.reload()">🔒</div>
         </div>
     </div>
@@ -107,23 +110,33 @@
             }
         }
 
-        function opn(id) { 
-            const el = document.getElementById(id); 
-            el.style.display = 'flex'; 
-            el.style.zIndex = Date.now(); 
+        // Modified Open: Now sets the URL when clicked
+        function opn(id, url) { 
+            const win = document.getElementById(id);
+            const ifr = document.getElementById('ifr-' + id);
+            
+            // If the iframe is empty, load the game
+            if (ifr.src === "" || ifr.src !== url) {
+                ifr.src = url;
+            }
+            
+            win.style.display = 'flex'; 
+            win.style.zIndex = Date.now(); 
         }
         
-        function cls(id) { document.getElementById(id).style.display = 'none'; }
+        // Modified Close: Hides window but keeps taskbar icon active
+        function cls(id) { 
+            document.getElementById(id).style.display = 'none'; 
+        }
 
-        // New Fullscreen Function
         function goFS(id) {
             const el = document.getElementById(id).querySelector('iframe');
-            if (el.requestFullscreen) { el.requestFullscreen(); }
-            else if (el.webkitRequestFullscreen) { el.webkitRequestFullscreen(); } // Safari/iPad fix
-            else if (el.msRequestFullscreen) { el.msRequestFullscreen(); }
+            if (el.requestFullscreen) el.requestFullscreen();
+            else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
         }
 
         function makeDraggable(el, handle) {
+            if (window.innerWidth < 600) return; 
             let drg = false, sx, sy, ix, iy;
             const start = (e) => { 
                 drg = true; 
