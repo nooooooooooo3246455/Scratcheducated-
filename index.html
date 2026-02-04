@@ -5,24 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Scratch Learning Portal</title>
     <style>
-        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.7); }
+        :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.6); }
         body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
 
-        /* --- DECORATED LOGIN SCREEN --- */
+        /* --- DECORATED LOGIN --- */
         #login-screen {
             position: fixed; inset: 0; 
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
+            background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
             background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
         }
         .login-box { 
             background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
             padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: center; color: white; width: 320px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            text-align: center; color: white; width: 300px;
         }
-        .login-box input { 
-            width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; 
-            border: none; background: rgba(255,255,255,0.9); outline: none; box-sizing: border-box; color: #333;
-        }
+        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; outline: none; text-align: center; font-size: 16px; }
         .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
 
         /* --- DESKTOP --- */
@@ -34,128 +31,76 @@
         /* --- DRAGGABLE WINDOWS --- */
         .window {
             position: absolute; top: 40px; left: 40px;
-            width: 80%; height: 65%;
+            width: 85%; height: 70%;
             background: rgba(255, 255, 255, 0.95); border-radius: 15px; display: none;
             flex-direction: column; overflow: hidden; z-index: 10;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5);
         }
-        .title-bar { padding: 10px 15px; background: #eee; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
-        .close-btn { background: #ff5f57; border: none; width: 20px; height: 20px; border-radius: 50%; color: white; cursor: pointer; }
+        .title-bar { padding: 12px 15px; background: #eee; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
+        .close-btn { background: #ff5f57; border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; }
         .content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* --- TINY FLOATING KEYBOARD --- */
-        #keyboard {
-            position: absolute; bottom: 100px; right: 20px; 
-            width: 280px; background: rgba(30, 30, 30, 0.85); backdrop-filter: blur(10px);
-            padding: 8px; border-radius: 12px; display: none; flex-direction: column; gap: 4px;
-            z-index: 20000; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .kb-bar { height: 15px; width: 100%; cursor: move; background: rgba(255,255,255,0.1); border-radius: 5px; margin-bottom: 5px; }
-        .kb-row { display: flex; justify-content: center; gap: 3px; }
-        .key { 
-            background: #444; color: white; border: none; padding: 8px 0; 
-            border-radius: 4px; flex: 1; font-size: 11px; font-weight: bold; cursor: pointer;
-        }
-        .key:active { background: var(--accent); }
-        .key.wide { flex: 2; }
-
         /* --- TASKBAR --- */
         .taskbar {
-            position: fixed; bottom: 15px; left: 50%; transform: translateX(-50%);
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             height: 60px; background: var(--glass); backdrop-filter: blur(15px);
-            display: flex; align-items: center; gap: 20px; padding: 0 25px; border-radius: 18px; z-index: 100;
+            display: flex; align-items: center; gap: 25px; padding: 0 30px; border-radius: 20px; z-index: 100;
         }
-        .tb-icon { font-size: 30px; cursor: pointer; transition: 0.2s; }
+        .tb-icon { font-size: 32px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <h1>WELCOME</h1>
-            <input type="password" id="passInput" placeholder="Enter PIN..." onclick="setTarget('passInput')">
-            <button onclick="unlock()">LOGIN</button>
+            <h1>PORTAL</h1>
+            <input type="password" id="passInput" placeholder="PIN...">
+            <button onclick="unlock()">ENTER</button>
         </div>
     </div>
 
     <audio id="bg-music" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+        <source src="my_music.mp4" type="audio/mp4">
+        <source src="my_music.mp3" type="audio/mpeg">
     </audio>
 
     <div id="os-content">
-        <div id="mc" class="window"><div class="title-bar"><span>Minecraft</span><button class="close-btn" onclick="closeApp('mc')">×</button></div><div class="content"><iframe src="https://classic.minecraft.net/"></iframe></div></div>
-        <div id="gd" class="window"><div class="title-bar"><span>Geometry Logic</span><button class="close-btn" onclick="closeApp('gd')">×</button></div><div class="content"><iframe src="https://geometrylitepc.io"></iframe></div></div>
-        <div id="notes" class="window" style="width:350px;">
-            <div class="title-bar"><span>Notes</span><button class="close-btn" onclick="closeApp('notes')">×</button></div>
-            <div class="content" style="background:white;"><textarea id="noteArea" style="width:100%; height:100%; border:none; padding:15px; font-size:16px;" onclick="setTarget('noteArea')"></textarea></div>
-        </div>
+        <div id="mc" class="window"><div class="title-bar"><span>Creative Studio</span><button class="close-btn" onclick="closeApp('mc')">×</button></div><div class="content"><iframe src="https://classic.minecraft.net/"></iframe></div></div>
+        <div id="gd" class="window"><div class="title-bar"><span>Logic Physics</span><button class="close-btn" onclick="closeApp('gd')">×</button></div><div class="content"><iframe src="https://geometrylitepc.io"></iframe></div></div>
+        <div id="notes" class="window" style="width:350px;"><div class="title-bar"><span>Notes</span><button class="close-btn" onclick="closeApp('notes')">×</button></div><div class="content" style="background:white;"><textarea style="width:100%; height:100%; border:none; padding:20px; outline:none; font-size:16px;"></textarea></div></div>
 
         <div class="taskbar">
             <div class="tb-icon" onclick="openApp('mc')">⛏️</div>
             <div class="tb-icon" onclick="openApp('gd')">🔥</div>
             <div class="tb-icon" onclick="openApp('notes')">📝</div>
-            <div class="tb-icon" onclick="toggleKB()">⌨️</div>
+            <div class="tb-icon" onclick="toggleMusic()" id="m-icon">🔇</div>
             <div class="tb-icon" onclick="location.reload()">🔒</div>
-        </div>
-    </div>
-
-    <div id="keyboard" class="window-kb">
-        <div class="kb-bar"></div>
-        <div class="kb-row" id="row1"></div>
-        <div class="kb-row" id="row2"></div>
-        <div class="kb-row" id="row3"></div>
-        <div class="kb-row">
-            <button class="key wide" onclick="typeKey(' ')">SPACE</button>
-            <button class="key" style="background:#ff5f57" onclick="typeKey('BACK')">←</button>
-            <button class="key" style="background:#4facfe" onclick="toggleKB()">✕</button>
         </div>
     </div>
 
     <script>
         const music = document.getElementById('bg-music');
-        music.volume = 0.15; // Quieter music fix
-
-        let activeInput = 'passInput';
+        music.volume = 0.15; // Set to very quiet
 
         function unlock() {
             if(document.getElementById('passInput').value === "admin") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('os-content').style.display = 'block';
                 music.play();
-                document.getElementById('keyboard').style.display = 'none';
+                document.getElementById('m-icon').innerText = '🎵';
             }
         }
 
-        // --- KEYBOARD SETUP ---
-        const rows = [["Q","W","E","R","T","Y","U","I","O","P"], ["A","S","D","F","G","H","J","K","L"], ["Z","X","C","V","B","N","M"]];
-        rows.forEach((row, i) => {
-            const container = document.getElementById('row' + (i+1));
-            row.forEach(k => {
-                const b = document.createElement('button');
-                b.className = 'key'; b.innerText = k;
-                b.onclick = () => typeKey(k);
-                container.appendChild(b);
-            });
-        });
-
-        function setTarget(id) { activeInput = id; document.getElementById('keyboard').style.display = 'flex'; }
-        function toggleKB() { 
-            const kb = document.getElementById('keyboard');
-            kb.style.display = (kb.style.display === 'none' || kb.style.display === '') ? 'flex' : 'none';
-        }
-
-        function typeKey(k) {
-            const el = document.getElementById(activeInput);
-            if(k === 'BACK') el.value = el.value.slice(0, -1);
-            else el.value += k.toLowerCase();
-            el.focus();
+        function toggleMusic() {
+            if(music.paused) { music.play(); document.getElementById('m-icon').innerText = '🎵'; }
+            else { music.pause(); document.getElementById('m-icon').innerText = '🔇'; }
         }
 
         function openApp(id) { document.getElementById(id).style.display = 'flex'; document.getElementById(id).style.zIndex = Date.now(); }
         function closeApp(id) { document.getElementById(id).style.display = 'none'; }
 
-        // --- DRAGGING LOGIC (Applied to Windows and Keyboard) ---
+        // Dragging Logic
         function makeDraggable(el, handle) {
             let drg = false, sx, sy, ix, iy;
             const start = (e) => {
@@ -167,18 +112,12 @@
                 if(!drg) return; const t = e.touches ? e.touches[0] : e;
                 el.style.left = (ix + (t.clientX - sx)) + 'px';
                 el.style.top = (iy + (t.clientY - sy)) + 'px';
-                el.style.bottom = 'auto'; el.style.right = 'auto';
             };
             handle.addEventListener('mousedown', start); handle.addEventListener('touchstart', start);
             document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false});
             document.addEventListener('mouseup', () => drg = false); document.addEventListener('touchend', () => drg = false);
         }
-
         document.querySelectorAll('.window').forEach(w => makeDraggable(w, w.querySelector('.title-bar')));
-        makeDraggable(document.getElementById('keyboard'), document.querySelector('.kb-bar'));
-
-        // Start login with KB open
-        setTarget('passInput');
     </script>
 </body>
 </html>
