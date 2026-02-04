@@ -7,92 +7,45 @@
     <style>
         :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.7); }
         body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; }
-
-        /* --- LOGIN SCREEN --- */
-        #login-screen {
-            position: fixed; inset: 0; 
-            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500');
-            background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000;
-        }
-        .login-box { 
-            background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px);
-            padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2);
-            text-align: center; color: white; width: 300px; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-        }
-        .login-box input { 
-            width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; 
-            border: none; background: rgba(255,255,255,0.9); outline: none; text-align: center; font-size: 16px;
-        }
+        #login-screen { position: fixed; inset: 0; background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1500'); background-size: cover; display: flex; align-items: center; justify-content: center; z-index: 10000; }
+        .login-box { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(25px); padding: 40px; border-radius: 30px; border: 1px solid rgba(255,255,255,0.2); text-align: center; color: white; width: 300px; }
+        .login-box input { width: 100%; padding: 12px; margin: 20px 0; border-radius: 10px; border: none; background: rgba(255,255,255,0.9); outline: none; text-align: center; font-size: 16px; color: #000; }
         .login-box button { width: 100%; padding: 12px; border-radius: 10px; border: none; background: var(--accent); color: white; font-weight: bold; cursor: pointer; }
-
-        /* --- DESKTOP --- */
-        #os-content {
-            display: none; width: 100%; height: 100%;
-            background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover;
-        }
-
-        /* --- DRAGGABLE WINDOWS --- */
-        .window {
-            position: absolute; top: 40px; left: 40px;
-            width: 85%; height: 70%;
-            background: rgba(255, 255, 255, 0.95); border-radius: 15px; display: none;
-            flex-direction: column; overflow: hidden; z-index: 10;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5);
-        }
+        #os-content { display: none; width: 100%; height: 100%; background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover; }
+        .window { position: absolute; top: 40px; left: 40px; width: 85%; height: 70%; background: rgba(255, 255, 255, 0.95); border-radius: 15px; display: none; flex-direction: column; overflow: hidden; z-index: 10; box-shadow: 0 15px 40px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.5); }
         .title-bar { padding: 12px 15px; background: #eee; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
         .close-btn { background: #ff5f57; border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; font-weight: bold; }
         .content { flex-grow: 1; background: #000; position: relative; }
         iframe { width: 100%; height: 100%; border: none; position: absolute; }
-
-        /* --- TASKBAR --- */
-        .taskbar {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            height: 60px; background: var(--glass); backdrop-filter: blur(15px);
-            display: flex; align-items: center; gap: 25px; padding: 0 30px; border-radius: 20px; z-index: 100;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .tb-icon { font-size: 32px; cursor: pointer; transition: transform 0.2s; }
-        .tb-icon:active { transform: scale(0.9); }
+        .taskbar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); height: 60px; background: var(--glass); backdrop-filter: blur(15px); display: flex; align-items: center; gap: 25px; padding: 0 30px; border-radius: 20px; z-index: 100; border: 1px solid rgba(255,255,255,0.1); }
+        .tb-icon { font-size: 32px; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <div id="login-screen">
         <div class="login-box">
-            <h1 style="font-weight: 300; letter-spacing: 2px;">STUDENT PORTAL</h1>
+            <h1>PORTAL</h1>
             <input type="password" id="passInput" placeholder="Enter PIN...">
             <button onclick="unlock()">LOGIN</button>
         </div>
     </div>
 
-    <audio id="bg-music" loop preload="auto">
+    <audio id="bg-music" loop>
         <source src="Monika.MP3" type="audio/mpeg">
     </audio>
 
     <div id="os-content">
-        <div id="mc" class="window">
-            <div class="title-bar"><span>Creative Engine</span><button class="close-btn" onclick="closeApp('mc')">×</button></div>
-            <div class="content"><iframe src="https://classic.minecraft.net/"></iframe></div>
-        </div>
-
-        <div id="gd" class="window">
-            <div class="title-bar"><span>Physics Simulator</span><button class="close-btn" onclick="closeApp('gd')">×</button></div>
-            <div class="content"><iframe src="https://geometrylitepc.io"></iframe></div>
-        </div>
-
-        <div id="notes" class="window" style="width:350px;">
-            <div class="title-bar"><span>Research Notes</span><button class="close-btn" onclick="closeApp('notes')">×</button></div>
-            <div class="content" style="background:white;">
-                <textarea style="width:100%; height:100%; border:none; padding:20px; outline:none; font-size:16px; box-sizing: border-box;"></textarea>
-            </div>
-        </div>
+        <div id="mc" class="window"><div class="title-bar"><span>Creative Engine</span><button class="close-btn" onclick="cls('mc')">×</button></div><div class="content"><iframe src="https://classic.minecraft.net/"></iframe></div></div>
+        <div id="gd" class="window"><div class="title-bar"><span>Physics Sim</span><button class="close-btn" onclick="cls('gd')">×</button></div><div class="content"><iframe src="https://geometrylitepc.io"></iframe></div></div>
+        <div id="notes" class="window" style="width:350px;"><div class="title-bar"><span>Notes</span><button class="close-btn" onclick="cls('notes')">×</button></div><div class="content" style="background:white;"><textarea style="width:100%; height:100%; border:none; padding:20px; outline:none; font-size:16px;"></textarea></div></div>
 
         <div class="taskbar">
-            <div class="tb-icon" onclick="openApp('mc')" title="Minecraft">⛏️</div>
-            <div class="tb-icon" onclick="openApp('gd')" title="Geometry Dash">🔥</div>
-            <div class="tb-icon" onclick="openApp('notes')" title="Notes">📝</div>
+            <div class="tb-icon" onclick="opn('mc')">⛏️</div>
+            <div class="tb-icon" onclick="opn('gd')">🔥</div>
+            <div class="tb-icon" onclick="opn('notes')">📝</div>
             <div class="tb-icon" onclick="toggleMusic()" id="m-icon">🔇</div>
-            <div class="tb-icon" onclick="location.reload()" title="Lock">🔒</div>
+            <div class="tb-icon" onclick="location.reload()">🔒</div>
         </div>
     </div>
 
@@ -100,69 +53,38 @@
         const music = document.getElementById('bg-music');
 
         function unlock() {
-            const pass = document.getElementById('passInput').value;
-            if(pass === "admin") {
+            if(document.getElementById('passInput').value === "admin") {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('os-content').style.display = 'block';
                 
-                // MUSIC SETUP
-                music.volume = 1.0; // MAX VOLUME BOOST
+                // BOOST AND PLAY
+                music.volume = 1.0; 
                 music.play().then(() => {
                     document.getElementById('m-icon').innerText = '🎵';
-                }).catch(err => {
-                    console.log("Autoplay blocked. Tap the music icon in the taskbar.");
-                    document.getElementById('m-icon').innerText = '🔇';
+                }).catch(e => {
+                    alert("Click the Mute icon in the taskbar to wake up the sound!");
                 });
-            } else {
-                alert("Incorrect PIN");
             }
         }
 
         function toggleMusic() {
-            music.volume = 1.0; // Ensure it stays loud on toggle
-            if (music.paused) {
-                music.play();
-                document.getElementById('m-icon').innerText = '🎵';
-            } else {
-                music.pause();
-                document.getElementById('m-icon').innerText = '🔇';
-            }
+            music.volume = 1.0;
+            if (music.paused) { music.play(); document.getElementById('m-icon').innerText = '🎵'; }
+            else { music.pause(); document.getElementById('m-icon').innerText = '🔇'; }
         }
 
-        function openApp(id) {
-            const el = document.getElementById(id);
-            el.style.display = 'flex';
-            el.style.zIndex = Date.now();
-        }
+        function opn(id) { const el = document.getElementById(id); el.style.display = 'flex'; el.style.zIndex = Date.now(); }
+        function cls(id) { document.getElementById(id).style.display = 'none'; }
 
-        function closeApp(id) {
-            document.getElementById(id).style.display = 'none';
-        }
-
-        // --- DRAGGING LOGIC ---
+        // Dragging
         function makeDraggable(el, handle) {
             let drg = false, sx, sy, ix, iy;
-            const start = (e) => {
-                drg = true;
-                const t = e.touches ? e.touches[0] : e;
-                sx = t.clientX; sy = t.clientY;
-                ix = el.offsetLeft; iy = el.offsetTop;
-                el.style.zIndex = Date.now();
-            };
-            const move = (e) => {
-                if(!drg) return;
-                const t = e.touches ? e.touches[0] : e;
-                el.style.left = (ix + (t.clientX - sx)) + 'px';
-                el.style.top = (iy + (t.clientY - sy)) + 'px';
-            };
-            handle.addEventListener('mousedown', start);
-            handle.addEventListener('touchstart', start);
-            document.addEventListener('mousemove', move);
-            document.addEventListener('touchmove', move, {passive:false});
-            document.addEventListener('mouseup', () => drg = false);
-            document.addEventListener('touchend', () => drg = false);
+            const start = (e) => { drg = true; const t = e.touches ? e.touches[0] : e; sx = t.clientX; sy = t.clientY; ix = el.offsetLeft; iy = el.offsetTop; el.style.zIndex = Date.now(); };
+            const move = (e) => { if(!drg) return; const t = e.touches ? e.touches[0] : e; el.style.left = (ix + (t.clientX - sx)) + 'px'; el.style.top = (iy + (t.clientY - sy)) + 'px'; };
+            handle.addEventListener('mousedown', start); handle.addEventListener('touchstart', start);
+            document.addEventListener('mousemove', move); document.addEventListener('touchmove', move, {passive:false});
+            document.addEventListener('mouseup', () => drg = false); document.addEventListener('touchend', () => drg = false);
         }
-
         document.querySelectorAll('.window').forEach(w => makeDraggable(w, w.querySelector('.title-bar')));
     </script>
 </body>
