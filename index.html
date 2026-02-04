@@ -2,62 +2,90 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Portal</title>
     <style>
         :root { --accent: #a29bfe; --glass: rgba(0, 0, 0, 0.85); }
         body, html { margin: 0; padding: 0; height: 100vh; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: #000; }
         
-        /* THE DESKTOP */
         #os-content {
             width: 100%; height: 100%;
             background: url('https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=1500') center/cover;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        .welcome-box {
-            background: var(--glass); backdrop-filter: blur(20px);
-            padding: 30px; border-radius: 25px; color: white; text-align: center;
-            border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            width: 80%; max-width: 400px;
+        /* FLOATING WINDOWS */
+        .window {
+            position: absolute; top: 5%; left: 5%;
+            width: 90%; height: 80%;
+            background: #1a1a1a; border-radius: 15px; display: none;
+            flex-direction: column; overflow: hidden; z-index: 10;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8); border: 1px solid rgba(255,255,255,0.1);
         }
+        
+        @media (max-width: 600px) { .window { width: 100%!important; height: 100%!important; top:0!important; left:0!important; border-radius:0; } }
+
+        .title-bar { padding: 12px; background: #222; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .win-btn { border: none; width: 30px; height: 30px; border-radius: 50%; color: white; cursor: pointer; font-size: 18px; }
+        .close-btn { background: #ff5f57; }
+        
+        .content { flex-grow: 1; background: #000; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
 
         /* THE TASKBAR */
         .taskbar {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            height: 75px; background: var(--glass); backdrop-filter: blur(30px);
-            display: flex; align-items: center; gap: 20px; padding: 0 30px; border-radius: 30px; z-index: 100;
-            border: 1px solid rgba(255,255,255,0.2);
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            height: 65px; background: var(--glass); backdrop-filter: blur(20px);
+            display: flex; align-items: center; gap: 20px; padding: 0 25px; border-radius: 20px; z-index: 100;
+            border: 1px solid rgba(255,255,255,0.1);
         }
-
-        .tb-icon { font-size: 35px; cursor: pointer; transition: transform 0.2s; -webkit-tap-highlight-color: transparent; }
-        .tb-icon:active { transform: scale(0.85); }
-        
-        h1 { margin: 0; font-weight: 300; font-size: 28px; letter-spacing: 2px; }
-        p { opacity: 0.6; font-size: 14px; margin-top: 10px; }
+        .tb-icon { font-size: 32px; cursor: pointer; transition: transform 0.1s; }
     </style>
 </head>
 <body>
 
     <div id="os-content">
-        <div class="welcome-box">
-            <h1>PORTAL</h1>
-            <p>Tap an icon below to launch.<br>Games open in new tabs to prevent black screens.</p>
-        </div>
+        <div id="mc" class="window"><div class="title-bar" onclick="rld('mc')"><span>Minecraft (Tap to Fix)</span><button class="win-btn close-btn" onclick="cls('mc')">×</button></div><div class="content"><iframe id="ifr-mc"></iframe></div></div>
+        
+        <div id="gd" class="window"><div class="title-bar" onclick="rld('gd')"><span>GDash (Tap to Fix)</span><button class="win-btn close-btn" onclick="cls('gd')">×</button></div><div class="content"><iframe id="ifr-gd"></iframe></div></div>
+
+        <div id="slope" class="window"><div class="title-bar" onclick="rld('slope')"><span>Slope (Tap to Fix)</span><button class="win-btn close-btn" onclick="cls('slope')">×</button></div><div class="content"><iframe id="ifr-slope"></iframe></div></div>
 
         <div class="taskbar">
-            <div class="tb-icon" onclick="launch('https://scratch.mit.edu/projects/editor/')">🐱</div>
-            <div class="tb-icon" onclick="launch('https://classic.minecraft.net/')">⛏️</div>
-            <div class="tb-icon" onclick="launch('https://geometrylitepc.io')">🔥</div>
-            <div class="tb-icon" onclick="launch('https://slopegame.io/')">⚽</div>
+            <div class="tb-icon" onclick="opn('mc', 'https://classic.minecraft.net/')">⛏️</div>
+            <div class="tb-icon" onclick="opn('gd', 'https://geometrylitepc.io')">🔥</div>
+            <div class="tb-icon" onclick="opn('slope', 'https://slopegame.io/')">⚽</div>
             <div class="tb-icon" onclick="location.reload()">🔄</div>
         </div>
     </div>
 
     <script>
-        function launch(url) {
-            // This bypasses iPad's "Black Screen" frame block
-            window.open(url, '_blank');
+        const links = {
+            'mc': 'https://classic.minecraft.net/',
+            'gd': 'https://geometrylitepc.io',
+            'slope': 'https://slopegame.io/'
+        };
+
+        function opn(id, url) { 
+            const win = document.getElementById(id);
+            const ifr = document.getElementById('ifr-' + id);
+            
+            // Set sandbox to allow everything but prevent top-level navigation
+            ifr.setAttribute('sandbox', 'allow-forms allow-modals allow-popups allow-presentation allow-scripts allow-same-origin');
+            ifr.src = url;
+            
+            win.style.display = 'flex'; 
+            win.style.zIndex = Date.now(); 
+        }
+        
+        function cls(id) { 
+            document.getElementById(id).style.display = 'none'; 
+            document.getElementById('ifr-' + id).src = ""; 
+        }
+
+        // The Fixer: If it's black, tapping the top bar re-injects the link
+        function rld(id) {
+            const ifr = document.getElementById('ifr-' + id);
+            ifr.src = links[id];
         }
     </script>
 </body>
