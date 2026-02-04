@@ -21,43 +21,43 @@
         }
         .login-box img { width: 60px; margin-bottom: 20px; }
         .login-box h2 { font-size: 18px; color: #333; margin-bottom: 10px; }
-        .login-box input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; }
+        .login-box input { width: 90%; padding: 12px; margin: 10px 0; border: 1px solid #ddd; border-radius: 6px; outline: none; }
         .login-box button { width: 100%; padding: 12px; background: #1a73e8; color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
 
-        /* --- ACTUAL OS CONTENT (HIDDEN BY DEFAULT) --- */
+        /* --- ACTUAL OS CONTENT --- */
         #os-content {
             display: none; width: 100%; height: 100%;
-            background: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?auto=format&fit=crop&w=1500') center/cover;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%); /* Matches your colorful screenshot background */
         }
 
         .desktop { display: grid; grid-template-columns: repeat(auto-fill, 110px); padding: 30px; gap: 20px; }
-        .icon { display: flex; flex-direction: column; align-items: center; color: white; text-shadow: 0 2px 5px #000; cursor: pointer; padding: 10px; }
-        .icon-img { font-size: 45px; }
-        .icon-label { font-size: 13px; margin-top: 5px; font-weight: bold; }
+        .icon { display: flex; flex-direction: column; align-items: center; color: white; text-shadow: 0 2px 5px rgba(0,0,0,0.5); cursor: pointer; padding: 10px; transition: 0.2s; }
+        .icon:active { transform: scale(0.9); background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .icon-img { font-size: 40px; }
+        .icon-label { font-size: 12px; margin-top: 5px; font-weight: 500; }
 
         .window {
-            position: absolute; top: 5%; left: 5%; width: 90%; height: 80%;
+            position: absolute; top: 10%; left: 10%; width: 80%; height: 70%;
             background: var(--win-bg); border-radius: 12px; display: none;
             flex-direction: column; overflow: hidden; z-index: 10;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid #ccc;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid rgba(0,0,0,0.1);
         }
-        .title-bar { padding: 12px; background: #f0f0f0; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; }
-        .close-btn { background: #ff5f57; border: none; width: 22px; height: 22px; border-radius: 50%; color: white; cursor: pointer; font-weight: bold; }
-        .content { flex-grow: 1; overflow: auto; background: #fff; }
+        .title-bar { padding: 10px 15px; background: #f8f8f8; display: flex; justify-content: space-between; align-items: center; cursor: move; touch-action: none; border-bottom: 1px solid #eee; }
+        .title-text { font-size: 13px; color: #555; font-weight: 600; }
+        .close-btn { background: #ff5f57; border: none; width: 20px; height: 20px; border-radius: 50%; color: white; cursor: pointer; font-size: 12px; line-height: 1; }
 
-        /* DumbTube Gallery */
-        .video-container { background: #000; width: 100%; aspect-ratio: 16/9; }
-        .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; padding: 15px; background: #1a1a1a; }
-        .video-card { background: #333; color: white; padding: 12px; border-radius: 8px; text-align: center; font-size: 11px; cursor: pointer; }
+        .content { flex-grow: 1; overflow: hidden; background: #fff; position: relative; }
+        iframe { width: 100%; height: 100%; border: none; }
 
-        /* Taskbar */
+        /* --- TASKBAR --- */
         .taskbar {
-            position: fixed; bottom: 10px; left: 50%; transform: translateX(-50%);
-            height: 60px; background: var(--taskbar-bg); display: flex;
-            align-items: center; gap: 20px; padding: 0 25px; border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100;
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            height: 55px; background: rgba(0, 0, 0, 0.8); backdrop-filter: blur(15px);
+            display: flex; align-items: center; gap: 15px; padding: 0 20px; border-radius: 18px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4); z-index: 100;
         }
-        .tb-icon { font-size: 30px; cursor: pointer; }
+        .tb-icon { font-size: 28px; cursor: pointer; transition: 0.2s; padding: 5px; }
+        .tb-icon:hover { transform: translateY(-5px); }
     </style>
 </head>
 <body>
@@ -65,8 +65,8 @@
     <div id="login-screen">
         <div class="login-box">
             <img src="https://www.gstatic.com/classroom/favicon.png" alt="Logo">
-            <h2>Portal Login</h2>
-            <p style="font-size: 12px; color: #666;">Enter Student Credentials</p>
+            <h2>Research Portal</h2>
+            <p style="font-size: 12px; color: #666;">Enter Credentials to Access Archive</p>
             <input type="password" id="passInput" placeholder="Access Key...">
             <button onclick="unlock()">Sign In</button>
         </div>
@@ -74,38 +74,32 @@
 
     <div id="os-content">
         <div class="desktop">
-            <div class="icon" onclick="openApp('yt')"><div class="icon-img">🎬</div><div class="icon-label">DumbTube</div></div>
             <div class="icon" onclick="openApp('mc')"><div class="icon-img">⛏️</div><div class="icon-label">Minecraft</div></div>
             <div class="icon" onclick="openApp('notes')"><div class="icon-img">📝</div><div class="icon-label">Notepad</div></div>
         </div>
 
-        <div id="yt" class="window">
-            <div class="title-bar"><span id="yt-title">DumbTube (Sambucha & Steak)</span><button class="close-btn" onclick="closeApp('yt')">×</button></div>
-            <div class="content" style="background:#1a1a1a;">
-                <div class="video-container">
-                    <video id="main-video" controls style="width:100%; height:100%;" playsinline>
-                        <source id="video-src" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4" type="video/mp4">
-                    </video>
-                </div>
-                <div class="gallery" id="gallery-list"></div>
-            </div>
-        </div>
-
         <div id="mc" class="window">
-            <div class="title-bar"><span>Minecraft Classic</span><button class="close-btn" onclick="closeApp('mc')">×</button></div>
+            <div class="title-bar">
+                <span class="title-text">Minecraft Classic</span>
+                <button class="close-btn" onclick="closeApp('mc')">×</button>
+            </div>
             <div class="content"><iframe src="https://classic.minecraft.net/"></iframe></div>
         </div>
 
-        <div id="notes" class="window" style="width:300px; height:350px;">
-            <div class="title-bar"><span>Notepad</span><button class="close-btn" onclick="closeApp('notes')">×</button></div>
-            <div class="content"><textarea style="width:100%; height:100%; border:none; padding:15px; outline:none; font-size:16px;" placeholder="Notes..."></textarea></div>
+        <div id="notes" class="window" style="width:350px; height:400px;">
+            <div class="title-bar">
+                <span class="title-text">Project Notes</span>
+                <button class="close-btn" onclick="closeApp('notes')">×</button>
+            </div>
+            <div class="content">
+                <textarea style="width:100%; height:100%; border:none; padding:15px; outline:none; font-size:16px; font-family: inherit; box-sizing: border-box;" placeholder="Type notes here..."></textarea>
+            </div>
         </div>
 
         <div class="taskbar">
-            <div class="tb-icon" onclick="openApp('yt')">🎬</div>
-            <div class="tb-icon" onclick="openApp('mc')">⛏️</div>
-            <div class="tb-icon" onclick="openApp('notes')">📝</div>
-            <div class="tb-icon" onclick="location.reload()" title="Panic Button">🔒</div>
+            <div class="tb-icon" onclick="openApp('mc')" title="Minecraft">⛏️</div>
+            <div class="tb-icon" onclick="openApp('notes')" title="Notepad">📝</div>
+            <div class="tb-icon" onclick="location.reload()" title="Lock System">🔒</div>
         </div>
     </div>
 
@@ -113,65 +107,3 @@
         // --- UNLOCK LOGIC ---
         function unlock() {
             const pin = document.getElementById('passInput').value;
-            if(pin === "admin") {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('os-content').style.display = 'block';
-            } else {
-                alert("Access Denied: Please use your authorized Student ID.");
-            }
-        }
-
-        // --- VIDEO DATABASE ---
-        const creators = [
-            { name: "Sambucha", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4", title: "Average Person vs Pro" },
-            { name: "Steak", url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4", title: "World's Spiciest Challenge" }
-        ];
-        
-        const gallery = document.getElementById('gallery-list');
-        const player = document.getElementById('main-video');
-        const source = document.getElementById('video-src');
-
-        for(let i=0; i<100; i++) {
-            let v = creators[i % creators.length];
-            const card = document.createElement('div');
-            card.className = 'video-card';
-            card.innerHTML = `🎬<br>${v.name} #${Math.floor(i/2 + 1)}`;
-            card.onclick = () => {
-                source.src = v.url;
-                player.load();
-                player.play();
-                document.querySelector('#yt .content').scrollTo({top:0, behavior:'smooth'});
-            };
-            gallery.appendChild(card);
-        }
-
-        // --- OS WINDOW LOGIC ---
-        function openApp(id) { 
-            const win = document.getElementById(id);
-            win.style.display = 'flex'; win.style.zIndex = Date.now(); 
-        }
-        function closeApp(id) { document.getElementById(id).style.display = 'none'; }
-
-        // Touch Dragging (Android/iPad)
-        document.querySelectorAll('.window').forEach(win => {
-            const bar = win.querySelector('.title-bar');
-            let isDrg = false, sx, sy, ix, iy;
-            bar.addEventListener('touchstart', (e) => {
-                isDrg = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY;
-                ix = win.offsetLeft; iy = win.offsetTop; win.style.zIndex = Date.now();
-            });
-            document.addEventListener('touchmove', (e) => {
-                if(!isDrg) return;
-                win.style.left = (ix + (e.touches[0].clientX - sx)) + 'px';
-                win.style.top = (iy + (e.touches[0].clientY - sy)) + 'px';
-            }, { passive: false });
-            document.addEventListener('touchend', () => isDrg = false);
-        });
-
-        // "P" for Panic (Instantly reloads to login screen)
-        document.addEventListener('keydown', (e) => {
-            if(e.key.toLowerCase() === 'p') location.reload();
-        });
-    </script>
-</body>
-</html>
